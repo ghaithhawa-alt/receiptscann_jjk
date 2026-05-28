@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – RECEIPTscann</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+.nav-btn{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;cursor:pointer;color:#64748b;font-weight:500;font-size:14px;transition:.2s;margin-bottom:4px;width:100%;background:none;border:none;text-align:left;font-family:inherit;}
+.nav-btn:hover{background:#f1f5f9;color:#1e293b;}
+.nav-btn.active{background:#e8f0ff;color:#1a6ef5;font-weight:600;}
+.nav-btn.nav-danger{color:#ef4444;}
+.nav-btn.nav-danger:hover{background:rgba(239,68,68,.08);}
+</style>
+</head>
+<body class="app-body">
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">
+      <div class="logo-icon sm"><svg viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="4" stroke="#fff" stroke-width="1.8"/><path d="M7 9h8M7 13h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      RECEIPTscann
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <p class="nav-section">Hauptmenü</p>
+    <button class="nav-btn active" id="nb-scan"     onclick="goTo('scan')">
+      <svg viewBox="0 0 20 20" fill="none" class="nav-icon"><rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M6 7h8M6 10h6M6 13h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Belege scannen
+    </button>
+    <button class="nav-btn" id="nb-folders"  onclick="goTo('folders')">
+      <svg viewBox="0 0 20 20" fill="none" class="nav-icon"><path d="M3 6a2 2 0 012-2h3l2 2h7a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" stroke="currentColor" stroke-width="1.6"/></svg>
+      Ordner
+    </button>
+    <button class="nav-btn" id="nb-reports"  onclick="goTo('reports')">
+      <svg viewBox="0 0 20 20" fill="none" class="nav-icon"><path d="M4 16V11M7 16V8M10 16V10M13 16V5M16 16V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Berichte
+    </button>
+    <p class="nav-section">Konto</p>
+    <button class="nav-btn" id="nb-settings" onclick="goTo('settings')">
+      <svg viewBox="0 0 20 20" fill="none" class="nav-icon"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Einstellungen
+    </button>
+    <button class="nav-btn nav-danger" onclick="window.location.href='/logout'">
+      <svg viewBox="0 0 20 20" fill="none" class="nav-icon"><path d="M13 3h3a1 1 0 011 1v12a1 1 0 01-1 1h-3M8 14l4-4-4-4M12 10H3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Abmelden
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="quota-box">
+      <div class="quota-label">Belege diesen Monat</div>
+      <div class="quota-bar"><div class="quota-fill" id="quota-fill"></div></div>
+      <div class="quota-text" id="quota-text">0 / 0</div>
+    </div>
+    <div class="plan-pill" id="plan-pill">...</div>
+  </div>
+</aside>
+
+<main class="main-content">
+  <header class="topbar">
+    <h1 class="page-title" id="section-title">Belege scannen</h1>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <div class="user-avatar" id="user-initials">?</div>
+        <div>
+          <div class="user-name" id="user-name-disp">...</div>
+          <div class="user-role" id="user-plan-disp">...</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SCAN -->
+  <section id="sec-scan">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Belege gesamt</div><div class="stat-val" id="s-total">0</div></div>
+      <div class="stat-card"><div class="stat-label">Ausgaben gesamt</div><div class="stat-val" id="s-amount">0,00 &#8364;</div></div>
+      <div class="stat-card"><div class="stat-label">Ordner</div><div class="stat-val" id="s-folders">0</div></div>
+    </div>
+    <div class="scan-drop" id="scan-drop">
+      <div class="scan-drop-icon">
+        <svg viewBox="0 0 48 48" fill="none" style="width:48px;height:48px"><rect width="48" height="48" rx="14" fill="#e8f0ff"/><path d="M24 30V18m0 0l-5 5m5-5l5 5" stroke="#1a6ef5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 34h20" stroke="#1a6ef5" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="scan-drop-title">Beleg hochladen</div>
+      <div class="scan-drop-sub">Klicken oder Datei hierher ziehen &middot; JPG, PNG, HEIC, PDF</div>
+      <div class="scan-actions">
+        <button class="btn-scan"     onclick="triggerUpload()">Datei hochladen</button>
+        <button class="btn-scan-sec" onclick="triggerUpload()">Foto aufnehmen</button>
+        <button class="btn-scan-sec" onclick="triggerUpload()">Aus Mediathek</button>
+      </div>
+      <input type="file" id="file-input" accept="image/*,.pdf" style="display:none" onchange="uploadReceipt(this)">
+    </div>
+    <div id="scan-progress" style="display:none;flex-direction:column;align-items:center;gap:14px;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;margin-bottom:22px;text-align:center">
+      <div class="spinner"></div>
+      <p id="scan-status">KI liest Beleg aus...</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Zuletzt gescannte Belege</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn-sm" onclick="exportExcel()">Excel-Export</button>
+          <button class="btn-sm">Lexware-Export</button>
+        </div>
+      </div>
+      <div id="receipts-empty" class="empty-state">Noch keine Belege.<br>Laden Sie Ihre erste Rechnung hoch!</div>
+      <table id="receipts-table" style="display:none">
+        <thead><tr><th>Händler</th><th>Datum</th><th>Gesamt</th><th>Kategorie</th><th>Ordner</th><th></th></tr></thead>
+        <tbody id="receipts-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FOLDERS -->
+  <section id="sec-folders" style="display:none">
+    <div class="section-actions">
+      <p class="section-desc">Belege in Ordnern organisieren</p>
+      <button class="btn-primary" onclick="openCreateFolderModal()">+ Neuer Ordner</button>
+    </div>
+    <div class="folders-grid" id="folders-grid"></div>
+  </section>
+
+  <!-- REPORTS -->
+  <section id="sec-reports" style="display:none">
+    <div class="report-filters" style="display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;align-items:center">
+      <button class="btn-sm active" onclick="setReportPeriod('monthly',this)">Monatlich</button>
+      <button class="btn-sm" onclick="setReportPeriod('quarterly',this)">Vierteljährlich</button>
+      <button class="btn-sm" onclick="setReportPeriod('yearly',this)">Jährlich</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <label style="font-size:12px;font-weight:600;color:#64748b">Jahr:</label>
+        <select id="filter-year" class="lang-sel" onchange="renderReports()"><option>2025</option><option>2024</option><option>2026</option></select>
+      </div>
+      <div id="month-filter" style="display:flex;align-items:center;gap:8px">
+        <label style="font-size:12px;font-weight:600;color:#64748b">Monat:</label>
+        <select id="filter-month" class="lang-sel" onchange="renderReports()">
+          <option value="all">Alle</option>
+          <option value="1">Januar</option><option value="2">Februar</option><option value="3">März</option>
+          <option value="4">April</option><option value="5">Mai</option><option value="6">Juni</option>
+          <option value="7">Juli</option><option value="8">August</option><option value="9">September</option>
+          <option value="10">Oktober</option><option value="11">November</option><option value="12">Dezember</option>
+        </select>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button class="btn-primary sm">PDF</button>
+        <button class="btn-outline sm">JPG</button>
+      </div>
+    </div>
+    <div class="stats-grid" id="cat-stats"></div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-header"><span class="card-title">Ausgaben nach Kategorie</span></div>
+      <canvas id="report-chart" height="220" style="width:100%;display:block"></canvas>
+      <div id="report-empty" class="empty-state" style="display:none">Keine Daten für diesen Zeitraum.</div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-header"><span class="card-title">Detaillierte Ausgaben</span></div>
+      <div id="report-table-empty" class="empty-state">Keine Belege für diesen Zeitraum.</div>
+      <table id="report-table" style="display:none">
+        <thead><tr><th>Datum</th><th>Händler</th><th>Kategorie</th><th>Betrag</th></tr></thead>
+        <tbody id="report-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="sec-settings" style="display:none">
+    <div class="settings-card">
+      <h3 class="settings-title">Konto-Einstellungen</h3>
+      <div class="settings-row"><div><strong>Name</strong><p id="s-name">...</p></div><button class="btn-sm">Ändern</button></div>
+      <div class="settings-row"><div><strong>E-Mail</strong><p id="s-email">...</p></div><button class="btn-sm">Ändern</button></div>
+      <div class="settings-row"><div><strong>Passwort</strong><p>**********</p></div><button class="btn-sm">Ändern</button></div>
+    </div>
+    <div class="settings-card">
+      <h3 class="settings-title">Sprache</h3>
+      <div class="settings-row"><div><strong>Anzeigesprache</strong></div>
+        <select class="lang-sel" onchange="changeLanguage(this.value)">
+          <option value="de">Deutsch</option>
+          <option value="en">English</option>
+          <option value="ar">Arabic</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-card">
+      <h3 class="settings-title">Abo-Verwaltung</h3>
+      <div class="settings-row"><div><strong>Aktueller Plan</strong><p id="s-plan">...</p></div><button class="btn-success" onclick="document.getElementById('modal-upgrade').classList.add('open')">Upgrade</button></div>
+      <div class="settings-row"><div><strong>Abo kündigen</strong></div><button class="btn-danger" onclick="document.getElementById('modal-cancel').classList.add('open')">Kündigen</button></div>
+    </div>
+    <div class="settings-card">
+      <h3 class="settings-title">Hilfe &amp; Support</h3>
+      <div class="settings-row"><div><strong>E-Mail</strong><p>receiptscann@gmail.com</p></div><a href="mailto:receiptscann@gmail.com" class="btn-sm">Schreiben</a></div>
+      <div class="settings-row"><div><strong>Telefon</strong><p>+49 1578 1225065</p></div><a href="tel:+4915781225065" class="btn-sm">Anrufen</a></div>
+    </div>
+  </section>
+</main>
+
+<div class="help-fab" onclick="document.getElementById('modal-help').classList.add('open')">
+  <svg viewBox="0 0 24 24" fill="none" style="width:24px;height:24px"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 015 .8c0 1.7-2.5 2.5-2.5 4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#fff"/></svg>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-cancel"><div class="modal"><h3>Abo wirklich kündigen?</h3><p>Ihr Zugang bleibt bis zum Ende des Abrechnungszeitraums aktiv.</p><div class="modal-btns"><button class="btn-sm" onclick="document.getElementById('modal-cancel').classList.remove('open')">Abbrechen</button><button class="btn-danger" onclick="document.getElementById('modal-cancel').classList.remove('open')">Ja, kündigen</button></div></div></div>
+<div class="modal-overlay" id="modal-upgrade"><div class="modal"><h3>Plan upgraden</h3><p>Als bestehender Kunde erhalten Sie 3% Rabatt!</p><div class="plan-options"><label class="plan-opt"><input type="radio" name="up" value="pro" checked><div><strong>Pro</strong><span>1.500 Belege · 12,60 &#8364;/Monat</span></div></label><label class="plan-opt" style="margin-top:8px"><input type="radio" name="up" value="business"><div><strong>Business</strong><span>5.000 Belege · 47,52 &#8364;/Monat</span></div></label></div><div class="modal-btns" style="margin-top:16px"><button class="btn-sm" onclick="document.getElementById('modal-upgrade').classList.remove('open')">Abbrechen</button><button class="btn-primary" onclick="doUpgrade()">Zur Zahlung</button></div></div></div>
+<div class="modal-overlay" id="modal-help"><div class="modal"><h3>Hilfe &amp; Support</h3><div class="help-item"><strong>Wie lade ich Belege hoch?</strong><p>Klicken Sie auf "Datei hochladen" im Scan-Bereich.</p></div><div class="help-item"><strong>Support:</strong><p>receiptscann@gmail.com &nbsp;·&nbsp; +49 1578 1225065</p></div><div class="modal-btns"><button class="btn-primary" onclick="document.getElementById('modal-help').classList.remove('open')">Schließen</button></div></div></div>
+<div class="modal-overlay" id="modal-folder"><div class="modal"><h3 id="folder-modal-title">Neuer Ordner</h3><div class="form-group"><label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Ordner-Name</label><input type="text" id="folder-name-input" placeholder="z.B. Januar 2025" style="width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;outline:none"></div><div class="modal-btns" style="margin-top:16px"><button class="btn-sm" onclick="document.getElementById('modal-folder').classList.remove('open')">Abbrechen</button><button class="btn-primary" id="folder-confirm-btn" onclick="confirmFolder()">Erstellen</button></div></div></div>
+<div class="modal-overlay" id="modal-add-to-folder"><div class="modal"><h3>Beleg zu Ordner hinzufügen</h3><div class="form-group"><label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Ordner wählen</label><select id="folder-select" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;outline:none;margin-top:4px"></select></div><div class="modal-btns" style="margin-top:16px"><button class="btn-sm" onclick="document.getElementById('modal-add-to-folder').classList.remove('open')">Abbrechen</button><button class="btn-primary" onclick="confirmAddToFolder()">Hinzufügen</button></div></div></div>
+
+<script>
+var USER     = {{ user | tojson }};
+var INIT_REC = {{ receipts | tojson }};
+var INIT_FOL = {{ folders | tojson }};
+var receipts = INIT_REC.slice();
+var folders  = JSON.parse(JSON.stringify(INIT_FOL));
+var currentPeriod  = 'monthly';
+var openFolderId   = null;
+var editingFolderId = null;
+var addingReceiptId = null;
+
+// ── Init ──────────────────────────────────────────────────────
+window.onload = function() {
+  var ini = USER.name ? USER.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2) : '?';
+  document.getElementById('user-initials').textContent  = ini;
+  document.getElementById('user-name-disp').textContent = USER.name || 'Benutzer';
+  document.getElementById('user-plan-disp').textContent = planLabel(USER.plan);
+  document.getElementById('s-name').textContent         = USER.name || '—';
+  document.getElementById('s-email').textContent        = '{{ session["user"] }}';
+  document.getElementById('s-plan').textContent         = planLabel(USER.plan) + ' · ' + planPrice(USER.plan);
+  document.getElementById('plan-pill').textContent      = planLabel(USER.plan);
+  updateQuota(USER.receipts_used || 0, USER.receipts_limit || 0);
+  renderReceipts(receipts);
+  renderFolders(null);
+
+  // Scan drop click
+  document.getElementById('scan-drop').onclick = function(e) {
+    if (e.target.tagName !== 'BUTTON') triggerUpload();
+  };
+
+  // Close modals
+  document.querySelectorAll('.modal-overlay').forEach(function(m) {
+    m.addEventListener('click', function(e) { if(e.target===m) m.classList.remove('open'); });
+  });
+
+  if (location.search.includes('payment=success')) {
+    showToast('Zahlung erfolgreich! Willkommen bei RECEIPTscann.', 'success');
+  }
+};
+
+function planLabel(p) { return ({starter:'Starter Plan',pro:'Pro Plan',business:'Business Plan'})[p] || (p ? p+' Plan' : '—'); }
+function planPrice(p) { return ({starter:'6,99 €/Monat',pro:'12,99 €/Monat',business:'48,99 €/Monat'})[p] || ''; }
+
+function updateQuota(used, limit) {
+  document.getElementById('quota-text').textContent = used + ' / ' + limit;
+  document.getElementById('quota-fill').style.width = (limit > 0 ? Math.min(100, (used/limit)*100) : 0) + '%';
+}
+
+function showToast(msg, type) {
+  var t = document.createElement('div');
+  t.style.cssText = 'position:fixed;top:20px;right:20px;padding:14px 22px;border-radius:12px;font-weight:700;font-size:14px;z-index:9999;color:#fff;background:' + (type==='success'?'#10b981':'#ef4444');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 4000);
+}
+
+// ── Navigation ────────────────────────────────────────────────
+var LANG = {
+  de:{scan:'Belege scannen',folders:'Ordner',reports:'Berichte',settings:'Einstellungen'},
+  en:{scan:'Scan Receipts',folders:'Folders',reports:'Reports',settings:'Settings'},
+  ar:{scan:'مسح الإيصالات',folders:'المجلدات',reports:'التقارير',settings:'الإعدادات'}
+};
+var currentLang = 'de';
+
+function goTo(name) {
+  ['scan','folders','reports','settings'].forEach(function(s) {
+    document.getElementById('sec-'+s).style.display = s===name ? 'block' : 'none';
+  });
+  ['scan','folders','reports','settings'].forEach(function(s) {
+    var btn = document.getElementById('nb-'+s);
+    if(btn) btn.classList.toggle('active', s===name);
+  });
+  document.getElementById('section-title').textContent = LANG[currentLang][name] || name;
+  if(name==='reports') renderReports();
+  if(name==='folders') renderFolders(openFolderId);
+}
+
+// ── Scan ──────────────────────────────────────────────────────
+function triggerUpload() {
+  document.getElementById('file-input').click();
+}
+
+async function uploadReceipt(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var prog = document.getElementById('scan-progress');
+  var stat = document.getElementById('scan-status');
+  prog.style.display = 'flex';
+  var steps = ['Bild analysieren...','Daten extrahieren...','Kategorisieren...','Speichern...'];
+  var i = 0;
+  var iv = setInterval(function(){ if(i < steps.length) stat.textContent = steps[i++]; }, 700);
+  var fd = new FormData();
+  fd.append('file', file);
+  try {
+    var res  = await fetch('/api/scan', {method:'POST', body: fd});
+    var data = await res.json();
+    clearInterval(iv);
+    prog.style.display = 'none';
+    if (data.success) {
+      receipts.push(data.receipt);
+      renderReceipts(receipts);
+      USER.receipts_used = (USER.receipts_used || 0) + 1;
+      updateQuota(USER.receipts_used, USER.receipts_limit);
+      showToast('Beleg erfolgreich gescannt!', 'success');
+    } else {
+      showToast('Fehler: ' + (data.error || 'Unbekannt'), 'error');
+    }
+  } catch(e) {
+    clearInterval(iv);
+    prog.style.display = 'none';
+    showToast('Netzwerkfehler: ' + e.message, 'error');
+  }
+  input.value = '';
+}
+
+function renderReceipts(list) {
+  document.getElementById('s-total').textContent  = list.length;
+  var total = list.reduce(function(s,r){ return s+(r.total||0); }, 0);
+  document.getElementById('s-amount').textContent = total.toFixed(2).replace('.',',') + ' €';
+  document.getElementById('s-folders').textContent = Object.keys(folders).length;
+  var empty = document.getElementById('receipts-empty');
+  var table = document.getElementById('receipts-table');
+  if (!list.length) { empty.style.display='block'; table.style.display='none'; return; }
+  empty.style.display = 'none';
+  table.style.display = 'table';
+  document.getElementById('receipts-tbody').innerHTML = list.slice().reverse().slice(0,30).map(function(r) {
+    var fname = '—';
+    if (r.folder_id && folders[r.folder_id]) fname = folders[r.folder_id].name;
+    return '<tr>'
+      + '<td><strong>' + (r.vendor||'—') + '</strong></td>'
+      + '<td>' + (r.date||'—') + '</td>'
+      + '<td>' + (r.total!=null ? r.total.toFixed(2).replace('.',',')+'&nbsp;€' : '—') + '</td>'
+      + '<td><span class="badge badge-cat">' + (r.category||'—') + '</span></td>'
+      + '<td style="font-size:12px;color:#64748b">' + fname + '</td>'
+      + '<td style="display:flex;gap:4px">'
+      + '<button class="btn-sm" style="font-size:11px;padding:4px 8px" onclick="openAddToFolder(' + r.id + ')">Ordner</button>'
+      + '<button class="btn-sm" style="font-size:11px;padding:4px 8px" onclick="deleteReceipt(' + r.id + ')">Löschen</button>'
+      + '</td></tr>';
+  }).join('');
+}
+
+async function deleteReceipt(id) {
+  if (!confirm('Beleg löschen?')) return;
+  await fetch('/api/receipts/'+id, {method:'DELETE'});
+  receipts = receipts.filter(function(r){ return r.id !== id; });
+  renderReceipts(receipts);
+}
+
+function exportExcel() { window.location.href = '/api/export/excel'; }
+
+// ── Folders ───────────────────────────────────────────────────
+function renderFolders(openFid) {
+  openFolderId = openFid;
+  document.getElementById('s-folders').textContent = Object.keys(folders).length;
+  var grid    = document.getElementById('folders-grid');
+  var entries = Object.entries(folders);
+  var addBtn  = '<div class="folder-card add-folder" onclick="openCreateFolderModal()" style="cursor:pointer">'
+    + '<div class="folder-icon"><svg viewBox="0 0 24 24" fill="none" style="width:28px;height:28px"><path d="M12 5v14M5 12h14" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/></svg></div>'
+    + '<div class="folder-name" style="color:#94a3b8">Neuer Ordner</div></div>';
+
+  if (!entries.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Noch keine Ordner.</div>' + addBtn;
+    return;
+  }
+  grid.innerHTML = entries.map(function(e) {
+    var fid = e[0], f = e[1];
+    var fr  = receipts.filter(function(r){ return r.folder_id === fid; });
+    var isOpen = openFid === fid;
+    var html = '<div class="folder-card-wrap">'
+      + '<div class="folder-card' + (isOpen?' folder-open':'') + '" onclick="toggleFolder(\'' + fid + '\')" style="cursor:pointer">'
+      + '<div class="folder-icon"><svg viewBox="0 0 24 24" fill="none" style="width:28px;height:28px"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#1a6ef5" stroke-width="1.8" fill="' + (isOpen?'#e8f0ff':'none') + '"/></svg></div>'
+      + '<div class="folder-name">' + f.name + '</div>'
+      + '<div class="folder-count">' + fr.length + ' Belege ' + (isOpen?'▲':'▼') + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:4px;margin-top:8px" onclick="event.stopPropagation()">'
+      + '<button class="btn-sm" style="font-size:11px;padding:3px 8px" onclick="openEditFolderModal(\'' + fid + '\')">Umbenennen</button>'
+      + '<button class="btn-sm" style="font-size:11px;padding:3px 8px;color:#ef4444;border-color:#ef4444" onclick="deleteFolder(\'' + fid + '\')">Löschen</button>'
+      + '</div></div>';
+    if (isOpen) {
+      html += '<div class="folder-content">';
+      if (!fr.length) {
+        html += '<p style="padding:14px;color:#94a3b8;font-size:13px">Keine Belege. Belege über den "Ordner" Button in der Belegliste hinzufügen.</p>';
+      } else {
+        html += '<table style="width:100%"><thead><tr><th>Händler</th><th>Datum</th><th>Gesamt</th><th>Kategorie</th><th></th></tr></thead><tbody>'
+          + fr.map(function(r){
+            return '<tr><td><strong>'+(r.vendor||'—')+'</strong></td><td>'+(r.date||'—')+'</td>'
+              +'<td>'+(r.total!=null?r.total.toFixed(2).replace('.',',')+'&nbsp;€':'—')+'</td>'
+              +'<td><span class="badge badge-cat">'+(r.category||'—')+'</span></td>'
+              +'<td><button class="btn-sm" style="font-size:11px;padding:3px 8px" onclick="removeFromFolder('+r.id+',\''+fid+'\')">Entfernen</button></td></tr>';
+          }).join('') + '</tbody></table>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }).join('') + addBtn;
+}
+
+function toggleFolder(fid) {
+  openFolderId = openFolderId === fid ? null : fid;
+  renderFolders(openFolderId);
+}
+
+function openCreateFolderModal() {
+  editingFolderId = null;
+  document.getElementById('folder-modal-title').textContent = 'Neuer Ordner';
+  document.getElementById('folder-name-input').value = '';
+  document.getElementById('folder-confirm-btn').textContent = 'Erstellen';
+  document.getElementById('modal-folder').classList.add('open');
+  setTimeout(function(){ document.getElementById('folder-name-input').focus(); }, 100);
+}
+
+function openEditFolderModal(fid) {
+  editingFolderId = fid;
+  document.getElementById('folder-modal-title').textContent = 'Ordner umbenennen';
+  document.getElementById('folder-name-input').value = folders[fid] ? folders[fid].name : '';
+  document.getElementById('folder-confirm-btn').textContent = 'Speichern';
+  document.getElementById('modal-folder').classList.add('open');
+  setTimeout(function(){ document.getElementById('folder-name-input').focus(); }, 100);
+}
+
+async function confirmFolder() {
+  var name = document.getElementById('folder-name-input').value.trim();
+  if (!name) { alert('Bitte einen Namen eingeben.'); return; }
+  if (editingFolderId) {
+    var res = await fetch('/api/folders/'+editingFolderId, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:name})});
+    if ((await res.json()).success) { folders[editingFolderId].name = name; renderFolders(openFolderId); }
+  } else {
+    var res = await fetch('/api/folders', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:name})});
+    var d   = await res.json();
+    if (d.success) { folders[d.folder_id] = {name:d.name, receipt_ids:[]}; renderFolders(openFolderId); document.getElementById('s-folders').textContent = Object.keys(folders).length; }
+  }
+  document.getElementById('modal-folder').classList.remove('open');
+}
+
+async function deleteFolder(fid) {
+  if (!confirm('Ordner "' + folders[fid].name + '" löschen?')) return;
+  var res = await fetch('/api/folders/'+fid, {method:'DELETE'});
+  if ((await res.json()).success) {
+    delete folders[fid];
+    receipts.forEach(function(r){ if(r.folder_id===fid) r.folder_id=null; });
+    renderFolders(null); renderReceipts(receipts);
+  }
+}
+
+function openAddToFolder(rid) {
+  addingReceiptId = rid;
+  var sel = document.getElementById('folder-select');
+  sel.innerHTML = '<option value="">-- Ordner wählen --</option>';
+  Object.entries(folders).forEach(function(e){ sel.innerHTML += '<option value="'+e[0]+'">'+e[1].name+'</option>'; });
+  document.getElementById('modal-add-to-folder').classList.add('open');
+}
+
+async function confirmAddToFolder() {
+  var fid = document.getElementById('folder-select').value;
+  if (!fid) { alert('Bitte einen Ordner wählen.'); return; }
+  var res = await fetch('/api/folders/'+fid+'/add-receipt', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({receipt_id:addingReceiptId})});
+  if ((await res.json()).success) {
+    var r = receipts.find(function(r){ return r.id===addingReceiptId; });
+    if (r) { r.folder_id = fid; if(!folders[fid].receipt_ids.includes(addingReceiptId)) folders[fid].receipt_ids.push(addingReceiptId); }
+    renderReceipts(receipts);
+    document.getElementById('modal-add-to-folder').classList.remove('open');
+  }
+}
+
+async function removeFromFolder(rid, fid) {
+  var r = receipts.find(function(x){ return x.id===rid; });
+  if (r) r.folder_id = null;
+  if (folders[fid]) folders[fid].receipt_ids = folders[fid].receipt_ids.filter(function(i){ return i!==rid; });
+  await fetch('/api/receipts/'+rid, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({folder_id:null})});
+  renderFolders(openFolderId); renderReceipts(receipts);
+}
+
+// ── Reports ───────────────────────────────────────────────────
+function setReportPeriod(p, btn) {
+  currentPeriod = p;
+  document.querySelectorAll('.report-filters .btn-sm').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('month-filter').style.display = p==='monthly' ? 'flex' : 'none';
+  renderReports();
+}
+
+function getFilteredReceipts() {
+  var year  = parseInt(document.getElementById('filter-year').value) || 2025;
+  var month = document.getElementById('filter-month').value;
+  return receipts.filter(function(r) {
+    if (!r.date) return false;
+    var pts = r.date.split('.');
+    if (pts.length < 3) return false;
+    if (parseInt(pts[2]) !== year) return false;
+    if (currentPeriod==='monthly' && month!=='all' && parseInt(pts[1])!==parseInt(month)) return false;
+    if (currentPeriod==='quarterly') {
+      var q  = Math.ceil(parseInt(pts[1])/3);
+      var fq = Math.ceil((new Date().getMonth()+1)/3);
+      if (q !== fq) return false;
+    }
+    return true;
+  });
+}
+
+function renderReports() {
+  var list = getFilteredReceipts();
+  var cats = {};
+  list.forEach(function(r){ var c=r.category||'Sonstiges'; cats[c]=(cats[c]||0)+(r.total||0); });
+  var entries = Object.entries(cats);
+  var grid = document.getElementById('cat-stats');
+  if (!entries.length) {
+    grid.innerHTML = '<div class="stat-card" style="grid-column:1/-1"><div class="stat-label">Keine Daten</div><div class="stat-val" style="font-size:16px;color:#94a3b8">Keine Belege für diesen Zeitraum</div></div>';
+    document.getElementById('report-empty').style.display = 'block';
+    document.getElementById('report-table').style.display = 'none';
+    document.getElementById('report-table-empty').style.display = 'block';
+    return;
+  }
+  document.getElementById('report-empty').style.display = 'none';
+  document.getElementById('report-table-empty').style.display = 'none';
+  var totalAll = entries.reduce(function(s,e){ return s+e[1]; }, 0);
+  grid.innerHTML = '<div class="stat-card"><div class="stat-label">Gesamt</div><div class="stat-val">' + totalAll.toFixed(2).replace('.',',') + '&nbsp;€</div></div>'
+    + entries.map(function(e){ return '<div class="stat-card"><div class="stat-label">'+e[0]+'</div><div class="stat-val">'+e[1].toFixed(2).replace('.',',')+'&nbsp;€</div></div>'; }).join('');
+  var canvas = document.getElementById('report-chart');
+  canvas.width = canvas.parentElement.clientWidth - 44 || 600;
+  var ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+  var max = Math.max.apply(null, entries.map(function(e){ return e[1]; }));
+  ctx.clearRect(0,0,W,H);
+  var colors = ['#1a6ef5','#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6'];
+  var bw = Math.min(70, (W-80)/(entries.length*2));
+  entries.forEach(function(e,i) {
+    var h = (e[1]/max)*(H-60), x = 40+(W-80)/(entries.length)*(i+0.5)-bw/2;
+    ctx.fillStyle = colors[i%colors.length];
+    ctx.fillRect(x, H-h-40, bw, h);
+    ctx.fillStyle='#64748b'; ctx.font='11px Plus Jakarta Sans'; ctx.textAlign='center';
+    ctx.fillText(e[0].slice(0,10), x+bw/2, H-20);
+    ctx.fillStyle='#1e293b'; ctx.font='bold 12px Plus Jakarta Sans';
+    ctx.fillText(e[1].toFixed(0)+'€', x+bw/2, H-h-48);
+  });
+  document.getElementById('report-table').style.display = 'table';
+  document.getElementById('report-tbody').innerHTML = list.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); }).map(function(r){
+    return '<tr><td>'+(r.date||'—')+'</td><td><strong>'+(r.vendor||'—')+'</strong></td><td><span class="badge badge-cat">'+(r.category||'—')+'</span></td><td>'+(r.total!=null?r.total.toFixed(2).replace('.',',')+'&nbsp;€':'—')+'</td></tr>';
+  }).join('');
+}
+
+// ── Settings ──────────────────────────────────────────────────
+function changeLanguage(lang) {
+  currentLang = lang;
+  document.body.style.direction = lang==='ar' ? 'rtl' : 'ltr';
+  var active = document.querySelector('.nav-btn.active');
+  if (active) {
+    var id = active.id.replace('nb-','');
+    document.getElementById('section-title').textContent = LANG[lang][id] || '';
+  }
+}
+
+async function doUpgrade() {
+  var plan = document.querySelector('input[name="up"]:checked');
+  if (!plan) return;
+  var res  = await fetch('/api/create-checkout', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({plan:plan.value, billing:'monthly', email:'{{ session["user"] }}'})});
+  var data = await res.json();
+  if (data.url) window.location.href = data.url;
+  else alert('Fehler: ' + (data.error || 'Stripe nicht konfiguriert'));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anmelden – RECEIPTscann</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="auth-body">
+<a href="/" class="back-link">&#8592; Zurück</a>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="logo" style="justify-content:center"><div class="logo-icon"><svg viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="4" stroke="#fff" stroke-width="1.8"/><path d="M7 9h8M7 13h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="16.5" cy="16.5" r="3.5" fill="#818cf8"/></svg></div>RECEIPTscann</div></div>
+    <div class="auth-tabs" style="display:grid;grid-template-columns:1fr 1fr 1fr">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Anmelden</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Registrieren</button>
+      <button class="auth-tab" id="tab-license" onclick="switchTab('license')">Lizenz-Code</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login-form">
+      <div class="form-group"><label>E-Mail-Adresse</label><input type="email" id="l-email" placeholder="name@firma.de"></div>
+      <div class="form-group">
+        <label>Passwort</label>
+        <div class="pw-wrap"><input type="password" id="l-pw" placeholder="Ihr Passwort" onkeydown="if(event.key==='Enter')doLogin()"><button type="button" class="pw-toggle" onclick="togglePw('l-pw',this)">Anzeigen</button></div>
+      </div>
+      <div id="login-error" class="form-error" style="display:none"></div>
+      <button class="btn-primary btn-full" onclick="doLogin()">Anmelden</button>
+      <div class="auth-support" style="margin-top:14px">Noch kein Konto? <a onclick="switchTab('register')" style="cursor:pointer;color:var(--blue);font-weight:600">Jetzt registrieren</a></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form" style="display:none">
+      <div class="form-row-2">
+        <div class="form-group"><label>Vorname</label><input type="text" id="r-fname" placeholder="Max"></div>
+        <div class="form-group"><label>Nachname</label><input type="text" id="r-lname" placeholder="Mustermann"></div>
+      </div>
+      <div class="form-group"><label>E-Mail</label><input type="email" id="r-email" placeholder="max@firma.de"></div>
+      <div class="form-group">
+        <label>Passwort</label>
+        <div class="pw-wrap"><input type="password" id="r-pw" placeholder="Mindestens 8 Zeichen"><button type="button" class="pw-toggle" onclick="togglePw('r-pw',this)">Anzeigen</button></div>
+      </div>
+      <div class="form-group">
+        <label>Passwort bestätigen</label>
+        <div class="pw-wrap"><input type="password" id="r-pw2" placeholder="Passwort wiederholen"><button type="button" class="pw-toggle" onclick="togglePw('r-pw2',this)">Anzeigen</button></div>
+      </div>
+
+      <!-- Billing Toggle -->
+      <div class="form-group">
+        <label>Zahlungsweise</label>
+        <div class="billing-toggle-sm">
+          <button type="button" class="toggle-btn active" id="r-monthly" onclick="setRegBilling('monthly')">Monatlich</button>
+          <button type="button" class="toggle-btn" id="r-yearly" onclick="setRegBilling('yearly')">Jährlich <span class="discount-badge">−12%</span></button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Abo-Plan wählen <span style="color:#ef4444">*</span></label>
+        <div class="plan-options">
+          <label class="plan-opt"><input type="radio" name="plan" value="starter"><div><strong>Starter</strong><span id="reg-price-starter">500 Belege · 6,99 &#8364;/Monat</span></div></label>
+          <label class="plan-opt featured"><input type="radio" name="plan" value="pro"><div><strong>Pro – Beliebt</strong><span id="reg-price-pro">1.500 Belege · 12,99 &#8364;/Monat</span></div></label>
+          <label class="plan-opt"><input type="radio" name="plan" value="business"><div><strong>Business</strong><span id="reg-price-business">5.000 Belege · 48,99 &#8364;/Monat</span></div></label>
+        </div>
+        <p style="font-size:11px;color:#94a3b8;margin-top:6px">Nach der Registrierung werden Sie zur sicheren Zahlung weitergeleitet.</p>
+      </div>
+      <div id="register-error" class="form-error" style="display:none"></div>
+      <button class="btn-primary btn-full" onclick="doRegister()">Weiter zur Zahlung</button>
+      <div class="auth-support" style="margin-top:14px">Bereits registriert? <a onclick="switchTab('login')" style="cursor:pointer;color:var(--blue);font-weight:600">Jetzt anmelden</a></div>
+    </div>
+
+    <!-- LICENSE FORM -->
+    <div id="license-form" style="display:none">
+      <div style="background:#e8f0ff;border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;color:#1a6ef5">
+        <strong>Lizenz-Code einlösen</strong><br>
+        Sie haben einen Lizenz-Code erhalten? Geben Sie ihn hier ein um ein Konto zu erstellen oder Ihre Lizenz zu aktivieren.
+      </div>
+      <div class="form-group">
+        <label>Lizenz-Code</label>
+        <input type="text" id="lic-code-input" placeholder="LIC-XXXXXXXXXX" style="text-transform:uppercase;letter-spacing:1px;font-weight:700;font-size:15px">
+      </div>
+      <div id="lic-existing" style="display:none">
+        <p style="font-size:13px;color:#64748b;margin-bottom:12px">Haben Sie bereits ein Konto? Melden Sie sich an und die Lizenz wird aktiviert:</p>
+        <div class="form-group"><label>E-Mail</label><input type="email" id="lic-existing-email" placeholder="ihre@email.de"></div>
+        <div class="form-group"><label>Passwort</label><div class="pw-wrap"><input type="password" id="lic-existing-pw" placeholder="Ihr Passwort"><button type="button" class="pw-toggle" onclick="togglePw('lic-existing-pw',this)">Anzeigen</button></div></div>
+      </div>
+      <div id="lic-new" style="display:none">
+        <p style="font-size:13px;color:#64748b;margin-bottom:12px">Noch kein Konto? Erstellen Sie eines:</p>
+        <div class="form-group"><label>Vollständiger Name</label><input type="text" id="lic-name" placeholder="Max Mustermann"></div>
+        <div class="form-group"><label>E-Mail</label><input type="email" id="lic-email" placeholder="ihre@email.de"></div>
+        <div class="form-group"><label>Passwort</label><div class="pw-wrap"><input type="password" id="lic-pw" placeholder="Mindestens 8 Zeichen"><button type="button" class="pw-toggle" onclick="togglePw('lic-pw',this)">Anzeigen</button></div></div>
+        <div class="form-group"><label>Passwort bestätigen</label><div class="pw-wrap"><input type="password" id="lic-pw2" placeholder="Passwort wiederholen"><button type="button" class="pw-toggle" onclick="togglePw('lic-pw2',this)">Anzeigen</button></div></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px;margin-top:4px">
+        <button type="button" class="btn-sm" onclick="document.getElementById('lic-existing').style.display='block';document.getElementById('lic-new').style.display='none'">Ich habe bereits ein Konto</button>
+        <button type="button" class="btn-sm" onclick="document.getElementById('lic-new').style.display='block';document.getElementById('lic-existing').style.display='none'">Neues Konto erstellen</button>
+      </div>
+      <div id="license-error" class="form-error" style="display:none"></div>
+      <div id="license-success" style="background:rgba(16,185,129,.1);color:#10b981;font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:14px;display:none"></div>
+      <button class="btn-primary btn-full" onclick="redeemLicense()">Lizenz einlösen</button>
+    </div>
+    <div class="auth-support" style="margin-top:20px">Probleme? <a href="mailto:receiptscann@gmail.com">receiptscann@gmail.com</a></div>
+  </div>
+</div>
+
+<script>
+var regBilling = 'monthly';
+var regPrices = {
+  monthly:  {starter:'500 Belege · 6,99 €/Monat', pro:'1.500 Belege · 12,99 €/Monat', business:'5.000 Belege · 48,99 €/Monat'},
+  yearly:   {starter:'500 Belege · 6,15 €/Monat', pro:'1.500 Belege · 11,43 €/Monat', business:'5.000 Belege · 43,11 €/Monat'}
+};
+
+function setRegBilling(mode) {
+  regBilling = mode;
+  document.getElementById('r-monthly').classList.toggle('active', mode==='monthly');
+  document.getElementById('r-yearly').classList.toggle('active', mode==='yearly');
+  document.getElementById('reg-price-starter').textContent  = regPrices[mode].starter;
+  document.getElementById('reg-price-pro').textContent      = regPrices[mode].pro;
+  document.getElementById('reg-price-business').textContent = regPrices[mode].business;
+}
+
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  document.getElementById('tab-license').classList.toggle('active', tab==='license');
+  document.getElementById('login-form').style.display    = tab==='login'    ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab==='register' ? 'block' : 'none';
+  document.getElementById('license-form').style.display  = tab==='license'  ? 'block' : 'none';
+}
+if (location.hash === '#register') switchTab('register');
+if (location.hash === '#license')  switchTab('license');
+
+function togglePw(id, btn) {
+  var input = document.getElementById(id);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'Verbergen';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'Anzeigen';
+  }
+}
+
+async function doLogin() {
+  var email = document.getElementById('l-email').value.trim();
+  var pw    = document.getElementById('l-pw').value;
+  var err   = document.getElementById('login-error');
+  err.style.display = 'none';
+  if (!email || !pw) { err.textContent='Bitte E-Mail und Passwort eingeben.'; err.style.display='block'; return; }
+  var res  = await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})});
+  var data = await res.json();
+  if (data.success) { window.location.href = (data.role==='admin'||data.role==='superadmin') ? '/admin' : '/dashboard'; }
+  else { err.textContent=data.message||'Fehler.'; err.style.display='block'; }
+}
+
+async function doRegister() {
+  var fname = document.getElementById('r-fname').value.trim();
+  var lname = document.getElementById('r-lname').value.trim();
+  var email = document.getElementById('r-email').value.trim();
+  var pw    = document.getElementById('r-pw').value;
+  var plan  = document.querySelector('input[name="plan"]:checked');
+  var err   = document.getElementById('register-error');
+  err.style.display = 'none';
+  var pw2 = document.getElementById('r-pw2').value;
+  if (!fname||!lname||!email||!pw) { err.textContent='Bitte alle Felder ausfüllen.'; err.style.display='block'; return; }
+  if (pw !== pw2) { err.textContent='Passwörter stimmen nicht überein.'; err.style.display='block'; return; }
+  if (!plan) { err.textContent='Bitte einen Abo-Plan wählen.'; err.style.display='block'; return; }
+  if (pw.length < 8) { err.textContent='Passwort muss mindestens 8 Zeichen haben.'; err.style.display='block'; return; }
+  var res  = await fetch('/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:fname+' '+lname,email:email,password:pw,plan:plan.value,billing:regBilling})});
+  var data = await res.json();
+  if (data.success && data.redirect_checkout) {
+    // Direkt zu Stripe Checkout
+    var cres  = await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan.value,billing:regBilling,email:email})});
+    var cdata = await cres.json();
+    if (cdata.url) { window.location.href = cdata.url; }
+    else { window.location.href = '/dashboard'; }
+  } else if (data.success) {
+    window.location.href = '/dashboard';
+  } else {
+    err.textContent=data.message||'Fehler.'; err.style.display='block';
+  }
+}
+async function redeemLicense() {
+  var code  = (document.getElementById('lic-code-input').value || '').trim().toUpperCase();
+  var err   = document.getElementById('license-error');
+  var succ  = document.getElementById('license-success');
+  err.style.display = 'none'; succ.style.display = 'none';
+
+  if (!code) { err.textContent='Bitte Lizenz-Code eingeben.'; err.style.display='block'; return; }
+
+  // Determine which form is shown
+  var hasExisting = document.getElementById('lic-existing').style.display !== 'none';
+  var hasNew      = document.getElementById('lic-new').style.display !== 'none';
+
+  var payload = { code: code };
+
+  if (hasExisting) {
+    payload.email    = document.getElementById('lic-existing-email').value.trim();
+    payload.password = document.getElementById('lic-existing-pw').value;
+  } else if (hasNew) {
+    var pw  = document.getElementById('lic-pw').value;
+    var pw2 = document.getElementById('lic-pw2').value;
+    if (pw !== pw2) { err.textContent='Passwörter stimmen nicht überein.'; err.style.display='block'; return; }
+    payload.name     = document.getElementById('lic-name').value.trim();
+    payload.email    = document.getElementById('lic-email').value.trim();
+    payload.password = pw;
+  } else {
+    err.textContent='Bitte wählen Sie ob Sie ein neues Konto erstellen oder ein bestehendes verwenden möchten.';
+    err.style.display='block'; return;
+  }
+
+  var res  = await fetch('/api/redeem-license', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+  var data = await res.json();
+
+  if (data.success) {
+    succ.textContent = data.message + ' Sie werden weitergeleitet...';
+    succ.style.display = 'block';
+    setTimeout(function(){ window.location.href = '/dashboard'; }, 1500);
+  } else {
+    err.textContent = data.message || 'Fehler beim Einlösen.';
+    err.style.display = 'block';
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RECEIPTscann – KI-Belegerfassung für Unternehmen</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="cookie-banner">
+  <p>Wir verwenden Cookies für eine bessere Erfahrung.</p>
+  <div class="cookie-btns">
+    <button onclick="document.getElementById('cookie-banner').style.display='none'">Ablehnen</button>
+    <button class="accept" onclick="document.getElementById('cookie-banner').style.display='none'">Akzeptieren</button>
+  </div>
+</div>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="4" stroke="#fff" stroke-width="1.8"/><path d="M7 9h8M7 13h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="16.5" cy="16.5" r="3.5" fill="#818cf8"/><path d="M15.5 16.5l.8.8 1.8-1.8" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+    RECEIPTscann
+  </div>
+  <div class="nav-links">
+    <a href="#features">Funktionen</a>
+    <a href="#how">So funktioniert's</a>
+    <a href="#pricing">Preise</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-cta">
+    <a href="/login" class="btn-outline">Anmelden</a>
+    <a href="/login#register" class="btn-primary">Registrieren</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> KI-gestützte Belegerfassung</div>
+    <h1>Belege scannen.<br><span>Einfach &amp; schnell.</span></h1>
+    <p>RECEIPTscann liest Ihre Rechnungen automatisch mit Claude AI aus und exportiert sie direkt nach Excel oder Lexware – kein Kopfzerbrechen mehr.</p>
+    <div class="hero-btns">
+      <a href="/login#register" class="btn-primary btn-xl">Jetzt starten</a>
+      <a href="#pricing" class="btn-outline btn-xl">Preise ansehen</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="num">50.000+</div><div class="lbl">Belege verarbeitet</div></div>
+      <div><div class="num">2.400+</div><div class="lbl">Unternehmen</div></div>
+      <div><div class="num">99.2%</div><div class="lbl">Genauigkeit</div></div>
+    </div>
+
+  </div>
+  <div class="hero-mockup">
+    <div class="mockup-browser">
+      <div class="mockup-bar">
+        <span class="mb-dot" style="background:#ff5f57"></span>
+        <span class="mb-dot" style="background:#febc2e"></span>
+        <span class="mb-dot" style="background:#28c840"></span>
+        <span class="mb-url">receiptscann.de/dashboard</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-sidebar">
+          <div class="ms-logo"><svg viewBox="0 0 16 16" fill="none" style="width:12px;height:12px"><rect x="2" y="2" width="12" height="12" rx="3" stroke="#1a6ef5" stroke-width="1.5"/><path d="M4.5 6h7M4.5 9h4" stroke="#1a6ef5" stroke-width="1.5" stroke-linecap="round"/></svg>RECEIPTscann</div>
+          <div class="ms-item active">Belege scannen</div>
+          <div class="ms-item">Ordner</div>
+          <div class="ms-item">Berichte</div>
+          <div class="ms-item">Einstellungen</div>
+        </div>
+        <div class="mockup-main">
+          <div class="mm-title">Belege scannen</div>
+          <div class="mm-upload"><svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px;margin-bottom:4px"><path d="M12 15V3m0 0L8 7m4-4l4 4" stroke="#1a6ef5" stroke-width="2" stroke-linecap="round"/><path d="M3 15v3a2 2 0 002 2h14a2 2 0 002-2v-3" stroke="#1a6ef5" stroke-width="2" stroke-linecap="round"/></svg><div class="mm-upload-text">Beleg hochladen</div><div class="mm-upload-sub">JPG, PNG, PDF</div></div>
+          <div class="mm-list">
+            <div class="mm-row"><span class="mm-vendor">Shell Tankstelle</span><span class="mm-amt">48,20 €</span><span class="mm-ok">OK</span></div>
+            <div class="mm-row"><span class="mm-vendor">Bauhaus GmbH</span><span class="mm-amt">234,80 €</span><span class="mm-ok">OK</span></div>
+            <div class="mm-row"><span class="mm-vendor">Metro AG</span><span class="mm-amt">89,40 €</span><span class="mm-ok">OK</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partners">
+  <p class="partner-title">PARTNER &amp; INTEGRATIONEN</p>
+  <div class="partner-logos">
+    <div class="partner-item"><svg viewBox="0 0 48 56" fill="none" style="width:28px;height:32px"><path d="M24 2L44 12v16c0 12-9 22-20 26C3 50 4 40 4 28V12L24 2z" fill="#00c07f"/><rect x="13" y="22" width="22" height="14" rx="3" fill="#111"/><circle cx="17" cy="36" r="3" fill="#444"/><circle cx="31" cy="36" r="3" fill="#444"/><path d="M13 27h22" stroke="#fff" stroke-width="1.5"/><rect x="17" y="19" width="14" height="7" rx="1.5" fill="#111"/></svg>FleetCompliance</div>
+    <div class="partner-item"><svg viewBox="0 0 32 32" fill="none" style="width:24px;height:24px"><rect width="32" height="32" rx="6" fill="#217346"/><path d="M10 12l4 8 4-8M20 12v8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Microsoft Excel</div>
+    <div class="partner-item"><svg viewBox="0 0 32 32" fill="none" style="width:24px;height:24px"><rect width="32" height="32" rx="6" fill="#e63329"/><path d="M8 10h16v2H8zM8 15h12v2H8zM8 20h14v2H8z" fill="#fff"/></svg>Lexware</div>
+    <div class="partner-item"><svg viewBox="0 0 32 32" fill="none" style="width:24px;height:24px"><rect width="32" height="32" rx="6" fill="#1a1a2e"/><circle cx="16" cy="16" r="7" stroke="#cc785c" stroke-width="2"/><circle cx="16" cy="13" r="2.5" fill="#cc785c"/><path d="M10 23c0-3.3 2.7-4 6-4s6 .7 6 4" stroke="#cc785c" stroke-width="1.5" stroke-linecap="round"/></svg>Claude AI</div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-header"><span class="tag">Funktionen</span><h2>Alles was Ihr Unternehmen braucht</h2><p>Von der Belegerfassung bis zum Excel-Export – RECEIPTscann übernimmt die gesamte Buchhaltungsvorbereitung.</p></div>
+  <div class="features-grid">
+    <div class="feature-card"><div class="fi-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#1a6ef5" stroke-width="1.8"/><path d="M7 9h10M7 13h7" stroke="#1a6ef5" stroke-width="1.8" stroke-linecap="round"/><circle cx="17" cy="16" r="3" fill="#e8f0ff" stroke="#1a6ef5" stroke-width="1.5"/><path d="M16 16l.8.8 1.6-1.6" stroke="#1a6ef5" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3>KI-Belegscan</h3><p>Foto oder PDF hochladen – Claude AI liest Betrag, Datum, Händler und MwSt. automatisch aus.</p></div>
+    <div class="feature-card"><div class="fi-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#1a6ef5" stroke-width="1.8"/><path d="M7 17V13M10 17V10M13 17V12M16 17V8" stroke="#1a6ef5" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Excel-Export</h3><p>Alle Belege strukturiert als Excel-Datei – sortiert nach Kategorie, Datum oder Betrag.</p></div>
+    <div class="feature-card"><div class="fi-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#1a6ef5" stroke-width="1.8"/></svg></div><h3>Ordner-System</h3><p>Belege in eigenen Ordnern nach Monaten oder Projekten organisieren.</p></div>
+    <div class="feature-card"><div class="fi-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V14M8 20V10M12 20V12M16 20V6M20 20V4" stroke="#1a6ef5" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Ausgaben-Berichte</h3><p>Monatliche, vierteljährliche und jährliche Berichte – KFZ, Kraftstoff, Einkauf usw.</p></div>
+    <div class="feature-card"><div class="fi-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="3" stroke="#1a6ef5" stroke-width="1.8"/><circle cx="12" cy="17" r="1.5" fill="#1a6ef5"/><path d="M9 6h6M9 9h4" stroke="#1a6ef5" stroke-width="1.5" stroke-linecap="round"/></svg></div><h3>Mobil-App</h3><p>Rechnung direkt fotografieren. Funktioniert auf iOS, Android und im Browser.</p></div>
+    <div class="feature-card"><div class="fi-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z" stroke="#1a6ef5" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#1a6ef5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>DSGVO-konform</h3><p>Daten verschlüsselt auf deutschen Servern. Vollständig DSGVO-konform.</p></div>
+  </div>
+</section>
+
+<section class="how-section" id="how">
+  <div class="section-header"><span class="tag">So funktioniert es</span><h2>In 4 Schritten zur digitalen Buchhaltung</h2></div>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><h4>Abo wählen</h4><p>Starter, Pro oder Business.</p></div>
+    <div class="step-arrow">&#8594;</div>
+    <div class="step"><div class="step-n">2</div><h4>Registrieren</h4><p>Konto erstellen und Zahlung abschließen.</p></div>
+    <div class="step-arrow">&#8594;</div>
+    <div class="step"><div class="step-n">3</div><h4>Beleg hochladen</h4><p>Foto oder PDF hochladen.</p></div>
+    <div class="step-arrow">&#8594;</div>
+    <div class="step"><div class="step-n">4</div><h4>Exportieren</h4><p>Excel, Lexware oder PDF.</p></div>
+  </div>
+</section>
+
+<!-- PRICING mit Jährlich/Monatlich Toggle und Stripe -->
+<section class="section" id="pricing">
+  <div class="section-header"><span class="tag">Preise</span><h2>Transparent &amp; fair</h2><p>Alle Preise zzgl. 19% MwSt.</p></div>
+  <div class="billing-toggle">
+    <button class="toggle-btn active" id="btn-monthly" onclick="setBilling('monthly')">Monatlich</button>
+    <button class="toggle-btn" id="btn-yearly" onclick="setBilling('yearly')">
+      Jährlich <span class="discount-badge">−12%</span>
+    </button>
+  </div>
+  <div class="pricing-grid">
+    <div class="plan-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price" id="price-starter">&#8364;6<span>,99</span></div>
+      <div class="plan-sub" id="sub-starter">pro Monat &middot; zzgl. 19% MwSt.</div>
+      <div class="plan-receipts" id="receipts-starter">500 Belege / Monat</div>
+      <ul><li>KI-Belegscan</li><li>Excel-Export</li><li>Ordner-System</li></ul>
+      <button class="btn-primary" onclick="startCheckout('starter')">Jetzt abonnieren</button>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-badge">Beliebteste Wahl</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price" id="price-pro">&#8364;12<span>,99</span></div>
+      <div class="plan-sub" id="sub-pro">pro Monat &middot; zzgl. 19% MwSt.</div>
+      <div class="plan-receipts" id="receipts-pro">1.500 Belege / Monat</div>
+      <ul><li>Alles aus Starter</li><li>Lexware-Export</li><li>Ausgaben-Berichte</li></ul>
+      <button class="btn-primary" onclick="startCheckout('pro')">Jetzt abonnieren</button>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Business</div>
+      <div class="plan-price" id="price-business">&#8364;48<span>,99</span></div>
+      <div class="plan-sub" id="sub-business">pro Monat &middot; zzgl. 19% MwSt.</div>
+      <div class="plan-receipts" id="receipts-business">5.000 Belege / Monat</div>
+      <ul><li>Alles aus Pro</li><li>Mehrere Nutzer</li><li>Erweiterte Berichte</li></ul>
+      <button class="btn-primary" onclick="startCheckout('business')">Jetzt abonnieren</button>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials-section">
+  <div class="section-header"><span class="tag">Bewertungen</span><h2>Was unsere Kunden sagen</h2></div>
+  <div class="testimonials-grid">
+    <div class="t-card"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>"RECEIPTscann hat unsere Buchhaltungsvorbereitung revolutioniert. Was früher 2 Stunden dauerte, erledigen wir jetzt in 10 Minuten."</p><div class="t-author"><div class="t-avatar" style="background:#1a6ef5">MK</div><div><strong>Markus Koch</strong><span>Koch Transporte GmbH</span></div></div></div>
+    <div class="t-card"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>"Die KI-Erkennung ist unglaublich genau. Selbst schlecht fotografierte Belege werden korrekt ausgelesen."</p><div class="t-author"><div class="t-avatar" style="background:#10b981">SB</div><div><strong>Sandra Bauer</strong><span>Autohaus Bauer</span></div></div></div>
+    <div class="t-card"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>"Der Export nach Lexware spart uns monatlich enorm viel Zeit. Auf dem Handy perfekt nutzbar."</p><div class="t-author"><div class="t-avatar" style="background:#f59e0b">TM</div><div><strong>Thomas Müller</strong><span>TM Elektrotechnik</span></div></div></div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="section-header"><span class="tag">FAQ</span><h2>Häufig gestellte Fragen</h2></div>
+  <div class="faq-list">
+    <div class="faq-item"><div class="faq-q">Wie genau ist die KI-Erkennung? <span>&#9660;</span></div><div class="faq-a">Claude AI erreicht über 99% Genauigkeit. Bei Unklarheiten können Sie Daten manuell korrigieren.</div></div>
+    <div class="faq-item"><div class="faq-q">Welche Dateiformate werden unterstützt? <span>&#9660;</span></div><div class="faq-a">JPG, PNG, HEIC und PDF. Direkt fotografieren oder aus der Mediathek hochladen.</div></div>
+    <div class="faq-item"><div class="faq-q">Kann ich mein Abo jederzeit kündigen? <span>&#9660;</span></div><div class="faq-a">Ja, jederzeit in den Einstellungen. Das Abo endet zum Ende des Abrechnungszeitraums.</div></div>
+    <div class="faq-item"><div class="faq-q">Wie funktioniert die Zahlung? <span>&#9660;</span></div><div class="faq-a">Zahlung über Stripe – sicher mit Kreditkarte, SEPA oder anderen Methoden. Nach der Registrierung werden Sie direkt zur Zahlung weitergeleitet.</div></div>
+    <div class="faq-item"><div class="faq-q">Sind meine Daten sicher? <span>&#9660;</span></div><div class="faq-a">Alle Daten werden verschlüsselt auf deutschen Servern gespeichert. Vollständig DSGVO-konform.</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="logo" style="color:#fff"><div class="logo-icon"><svg viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="4" stroke="#fff" stroke-width="1.8"/><path d="M7 9h8M7 13h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>RECEIPTscann</div><p>Die intelligente Belegverwaltung für moderne Unternehmen.</p></div>
+    <div class="footer-links"><h4>Produkt</h4><a href="#features">Funktionen</a><a href="#pricing">Preise</a><a href="#faq">FAQ</a></div>
+    <div class="footer-links"><h4>Unternehmen</h4><a href="#">Über uns</a><a href="#">Partner</a></div>
+    <div class="footer-links"><h4>Support</h4><a href="mailto:receiptscann@gmail.com">receiptscann@gmail.com</a><a href="tel:+4915781225065">+49 1578 1225065</a><a href="#">Datenschutz</a><a href="#">Impressum</a></div>
+  </div>
+  <div class="footer-bottom"><p>&#169; 2025 RECEIPTscann. Alle Rechte vorbehalten.</p><p>Made in Deutschland</p></div>
+</footer>
+
+<script>
+var currentBilling = 'monthly';
+var prices = {
+  monthly: {starter:'€6<span>,99</span>', pro:'€12<span>,99</span>', business:'€48<span>,99</span>'},
+  yearly:  {starter:'€6<span>,15</span>', pro:'€11<span>,43</span>', business:'€43<span>,11</span>'}
+};
+var yearlyTotal = {starter:'73,80', pro:'137,16', business:'517,32'};
+var receiptCounts = {
+  monthly: {starter:'500', pro:'1.500', business:'5.000'},
+  yearly:  {starter:'6.599', pro:'15.000', business:'55.999'}
+};
+
+function setBilling(mode) {
+  currentBilling = mode;
+  document.getElementById('btn-monthly').classList.toggle('active', mode==='monthly');
+  document.getElementById('btn-yearly').classList.toggle('active', mode==='yearly');
+  document.getElementById('price-starter').innerHTML  = prices[mode].starter;
+  document.getElementById('price-pro').innerHTML      = prices[mode].pro;
+  document.getElementById('price-business').innerHTML = prices[mode].business;
+  // Update receipt counts
+  document.getElementById('receipts-starter').textContent  = receiptCounts[mode].starter + ' Belege / ' + (mode==='yearly' ? 'Jahr' : 'Monat');
+  document.getElementById('receipts-pro').textContent      = receiptCounts[mode].pro      + ' Belege / ' + (mode==='yearly' ? 'Jahr' : 'Monat');
+  document.getElementById('receipts-business').textContent = receiptCounts[mode].business + ' Belege / ' + (mode==='yearly' ? 'Jahr' : 'Monat');
+  // Update sub text
+  if (mode==='yearly') {
+    document.getElementById('sub-starter').innerHTML  = 'pro Monat · Jahrespreis <strong>73,80 €</strong> · zzgl. MwSt.';
+    document.getElementById('sub-pro').innerHTML      = 'pro Monat · Jahrespreis <strong>137,16 €</strong> · zzgl. MwSt.';
+    document.getElementById('sub-business').innerHTML = 'pro Monat · Jahrespreis <strong>517,32 €</strong> · zzgl. MwSt.';
+  } else {
+    document.getElementById('sub-starter').textContent  = 'pro Monat · zzgl. 19% MwSt.';
+    document.getElementById('sub-pro').textContent      = 'pro Monat · zzgl. 19% MwSt.';
+    document.getElementById('sub-business').textContent = 'pro Monat · zzgl. 19% MwSt.';
+  }
+}
+
+async function startCheckout(plan) {
+  var res  = await fetch('/api/create-checkout', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({plan:plan, billing:currentBilling, email:''})});
+  var data = await res.json();
+  if (data.url) { window.location.href = data.url; }
+  else { alert('Fehler: '+(data.error||'Stripe nicht konfiguriert. Bitte zuerst registrieren.')); window.location.href='/login#register'; }
+}
+
+document.querySelectorAll('.faq-q').forEach(function(q){ q.addEventListener('click', function(){ this.parentElement.classList.toggle('open'); }); });
+document.querySelectorAll('a[href^="#"]').forEach(function(a){ a.addEventListener('click', function(e){ var t=document.querySelector(this.getAttribute('href')); if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});} }); });
+</script>
+</body>
+</html>
